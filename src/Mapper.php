@@ -2,6 +2,6 @@
 
 namespace Zorachka\Mapper;
 
-class MapperClass
+final class Mapper
 {
 }
