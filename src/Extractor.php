@@ -12,7 +12,7 @@ final class Extractor
     /**
      * @var array<string, ReflectionClass>
      */
-    private array $reflectionClassMap;
+    private array $reflectionClassMap = [];
 
     /**
      * @param object $object
@@ -37,7 +37,7 @@ final class Extractor
     }
 
     /**
-     * @param string $className
+     * @param class-string $className
      * @return ReflectionClass
      * @throws ReflectionException
      */

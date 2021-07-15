@@ -12,9 +12,12 @@ final class Hydrator
     /**
      * @var array<string, ReflectionClass>
      */
-    private array $reflectionClassMap;
+    private array $reflectionClassMap = [];
 
     /**
+     * @param class-string $className
+     * @param array $data
+     * @return object
      * @throws ReflectionException
      */
     public function hydrate(string $className, array $data): object
@@ -34,7 +37,7 @@ final class Hydrator
     }
 
     /**
-     * @param string $className
+     * @param class-string $className
      * @return ReflectionClass
      * @throws ReflectionException
      */
