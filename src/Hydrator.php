@@ -40,7 +40,7 @@ final class Hydrator
      */
     private function getReflectionClassInstance(string $className): ReflectionClass
     {
-        if (!isset($this->reflectionClassMap[$className])) {
+        if (! isset($this->reflectionClassMap[$className])) {
             $this->reflectionClassMap[$className] = new ReflectionClass($className);
         }
 
