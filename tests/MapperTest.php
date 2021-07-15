@@ -8,4 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 final class MapperTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        self::markTestSkipped();
+    }
 }
