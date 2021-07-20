@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Zorachka\Mapper;
 
 use DateTimeImmutable;
+use RuntimeException;
+use function sprintf;
 
 final class DatabaseMapper
 {
@@ -96,10 +98,16 @@ final class DatabaseMapper
             return null;
         }
 
-        return DateTimeImmutable::createFromFormat(
+        $dateTimeImmutable = DateTimeImmutable::createFromFormat(
             $format,
             $this->data[$key],
             new \DateTimeZone($timezone)
         );
+
+        if ($dateTimeImmutable === false) {
+            throw new RuntimeException(sprintf('Can\'t cast datetime "%s"', $this->data[$key]));
+        }
+
+        return $dateTimeImmutable;
     }
 }
