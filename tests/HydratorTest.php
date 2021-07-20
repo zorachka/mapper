@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Zorachka\Mapper\Tests;
 
 use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
 use ReflectionException;
+use PHPUnit\Framework\TestCase;
 use Zorachka\Mapper\Hydrator;
 
 final class HydratorTest extends TestCase
