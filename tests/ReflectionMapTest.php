@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zorachka\Mapper\Tests;
 
-use ReflectionException;
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
 use Zorachka\Mapper\Attributes\Guid;
 use Zorachka\Mapper\Attributes\PrimaryKey;
 use Zorachka\Mapper\ReflectionMap;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zorachka\Mapper;
 
-use Closure;
 use ReflectionException;
 use ReflectionNamedType;
 use RuntimeException;
