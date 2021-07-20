@@ -17,7 +17,7 @@ final class DatabaseMapper
 
     public function getString(string $key): string
     {
-        if (!isset($this->data[$key])) {
+        if (! isset($this->data[$key])) {
             return '';
         }
 
@@ -26,7 +26,7 @@ final class DatabaseMapper
 
     public function getInt(string $key): int
     {
-        if (!isset($this->data[$key])) {
+        if (! isset($this->data[$key])) {
             return 0;
         }
 
@@ -35,7 +35,7 @@ final class DatabaseMapper
 
     public function getBoolean(string $key): bool
     {
-        if (!isset($this->data[$key])) {
+        if (! isset($this->data[$key])) {
             return false;
         }
 
@@ -44,7 +44,7 @@ final class DatabaseMapper
 
     public function getBooleanOrNull(string $key): ?bool
     {
-        if (!isset($this->data[$key])) {
+        if (! isset($this->data[$key])) {
             return null;
         }
 
@@ -58,7 +58,7 @@ final class DatabaseMapper
     public function getIntOrNull(
         string $key
     ): ?int {
-        if (!isset($this->data[$key])) {
+        if (! isset($this->data[$key])) {
             return null;
         }
 
@@ -72,7 +72,7 @@ final class DatabaseMapper
     public function getNonEmptyStringOrNull(
         string $key
     ): ?string {
-        if (!isset($this->data[$key])) {
+        if (! isset($this->data[$key])) {
             return null;
         }
 
@@ -88,7 +88,7 @@ final class DatabaseMapper
         string $format = 'Y-m-d H:i:s',
         string $timezone = 'UTC',
     ): ?DateTimeImmutable {
-        if (!isset($this->data[$key])) {
+        if (! isset($this->data[$key])) {
             return null;
         }
 
