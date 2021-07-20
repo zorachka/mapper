@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Zorachka\Mapper;
 
-use ReflectionClass;
 use ReflectionException;
+use ReflectionNamedType;
+use RuntimeException;
+use function sprintf;
 
 final class Hydrator
 {
-    /**
-     * @var array<string, ReflectionClass>
-     */
-    private array $reflectionClassMap = [];
+    private ReflectionMap $reflectionMap;
+
+    public function __construct()
+    {
+        $this->reflectionMap = new ReflectionMap();
+    }
 
     /**
+     * Hydrate $object with the provided $data.
      * @param class-string $className
      * @param array $data
      * @return object
@@ -22,31 +27,77 @@ final class Hydrator
      */
     public function hydrate(string $className, array $data): object
     {
-        $reflection = $this->getReflectionClassInstance($className);
-        $target = $reflection->newInstanceWithoutConstructor();
+        $mapper = new DatabaseMapper($data);
+
+        $target = $this->reflectionMap->getTargetInstance($className);
+        $reflectionProperties = $this->reflectionMap->getReflectionProperties($className);
 
         foreach ($data as $name => $value) {
-            $property = $reflection->getProperty($name);
-            if ($property->isPrivate() || $property->isProtected()) {
-                $property->setAccessible(true);
+            if (!isset($reflectionProperties[$name])) {
+                throw new ReflectionException(sprintf('Property "%s" doesn\'t exists', $name));
             }
-            $property->setValue($target, $value);
+
+            $reflectionProperty = $reflectionProperties[$name];
+
+            if (!$reflectionProperty->hasType()) {
+                throw new RuntimeException('Property must have a type for hydration');
+            }
+
+            /** @var ReflectionNamedType $reflectionPropertyType */
+            $reflectionPropertyType = $reflectionProperty->getType();
+
+            if ($reflectionPropertyType->isBuiltin()) {
+                $handlers = [
+                    'string' => fn () => $reflectionProperty->setValue(
+                        $target,
+                        $mapper->getNonEmptyStringOrNull($name)
+                    ),
+                    'bool' => fn () => $reflectionProperty->setValue(
+                        $target,
+                        $mapper->getBooleanOrNull($name)
+                    ),
+                    'int' => fn () => $reflectionProperty->setValue(
+                        $target,
+                        $mapper->getIntOrNull($name)
+                    ),
+                    'default' => fn () => $reflectionProperty->setValue($target, $value),
+                ];
+
+                $reflectionPropertyTypeName = $reflectionPropertyType->getName();
+
+                $handler = $handlers[$reflectionPropertyTypeName] ?? $handlers['default'];
+
+                $handler();
+            }
         }
 
         return $target;
     }
 
     /**
-     * @param class-string $className
-     * @return ReflectionClass
+     * Extract values from an object
+     * @param object $object
+     * @param array<string> $not
+     * @return array
      * @throws ReflectionException
      */
-    private function getReflectionClassInstance(string $className): ReflectionClass
+    public function extract(object $object, array $not = []): array
     {
-        if (! isset($this->reflectionClassMap[$className])) {
-            $this->reflectionClassMap[$className] = new ReflectionClass($className);
+        $data = [];
+        $className = $object::class;
+        foreach ($this->reflectionMap->getReflectionProperties($className) as $property) {
+            $propertyName = $property->getName();
+            $value = $property->getValue($object);
+
+            if (!empty($not)) {
+                if (!in_array($propertyName, $not)) {
+                    $data[$propertyName] = $value;
+                }
+            } else {
+                $data[$propertyName] = $value;
+            }
         }
 
-        return $this->reflectionClassMap[$className];
+        return $data;
     }
 }

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Zorachka\Mapper\Tests;
 
-use PHPUnit\Framework\TestCase;
+use DateTimeImmutable;
 use ReflectionException;
+use PHPUnit\Framework\TestCase;
 use Zorachka\Mapper\Hydrator;
 
 final class HydratorTest extends TestCase
@@ -27,12 +28,12 @@ final class HydratorTest extends TestCase
         $testObject = $this->hydrator->hydrate(TestClass::class, [
             'privateField' => 1,
             'protectedField' => 2,
-            'publicField' => 3,
+            'publicField' => 0,
         ]);
 
-        self::assertEquals(1, $testObject->getPrivateField());
+        self::assertEquals('1', $testObject->getPrivateField());
         self::assertEquals(2, $testObject->getProtectedField());
-        self::assertEquals(3, $testObject->publicField);
+        self::assertEquals(false, $testObject->publicField);
         self::assertFalse($testObject->getConstructorCalled());
     }
 
@@ -44,5 +45,36 @@ final class HydratorTest extends TestCase
             'publicField' => 1,
             'otherField' => 2,
         ]);
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    public function testExtractFull()
+    {
+        $testObject = new TestClass('1', 2, false, new DateTimeImmutable());
+
+        $row = $this->hydrator->extract($testObject, ['constructorCalled']);
+
+        self::assertEquals([
+            'publicField' => $testObject->publicField,
+            'protectedField' => $testObject->getProtectedField(),
+            'privateField' => $testObject->getPrivateField(),
+            'dateTimeImmutableField' => $testObject->getDateTimeImmutableField(),
+        ], $row);
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    public function testExtractPartial()
+    {
+        $testObject = new TestClass('1', 2, false, new DateTimeImmutable());
+        $row = $this->hydrator->extract($testObject, ['constructorCalled', 'publicField', 'dateTimeImmutableField']);
+
+        self::assertEquals([
+            'protectedField' => $testObject->getProtectedField(),
+            'privateField' => $testObject->getPrivateField(),
+        ], $row);
     }
 }
