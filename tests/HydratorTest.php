@@ -24,8 +24,8 @@ final class HydratorTest extends TestCase
      */
     public function testHydrate(): void
     {
-        /** @var TestClass $testObject */
-        $testObject = $this->hydrator->hydrate(TestClass::class, [
+        /** @var Simple $testObject */
+        $testObject = $this->hydrator->hydrate(Simple::class, [
             'privateField' => 1,
             'protectedField' => 2,
             'publicField' => 0,
@@ -41,7 +41,7 @@ final class HydratorTest extends TestCase
     {
         self::expectException(ReflectionException::class);
 
-        $this->hydrator->hydrate(TestClass::class, [
+        $this->hydrator->hydrate(Simple::class, [
             'publicField' => 1,
             'otherField' => 2,
         ]);
@@ -52,7 +52,7 @@ final class HydratorTest extends TestCase
      */
     public function testExtractFull()
     {
-        $testObject = new TestClass('1', 2, false, new DateTimeImmutable());
+        $testObject = new Simple('1', 2, false, new DateTimeImmutable());
 
         $row = $this->hydrator->extract($testObject, ['constructorCalled']);
 
@@ -69,7 +69,7 @@ final class HydratorTest extends TestCase
      */
     public function testExtractPartial()
     {
-        $testObject = new TestClass('1', 2, false, new DateTimeImmutable());
+        $testObject = new Simple('1', 2, false, new DateTimeImmutable());
         $row = $this->hydrator->extract($testObject, ['constructorCalled', 'publicField', 'dateTimeImmutableField']);
 
         self::assertEquals([

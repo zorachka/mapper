@@ -33,21 +33,47 @@ final class ReflectionMap
         $reflectionClass = new ReflectionClass($className);
         $reflectionProperties = $reflectionClass->getProperties();
 
+        $attributes = [];
+        if (!empty($classAttributes = $reflectionClass->getAttributes())) {
+            foreach ($classAttributes as $attribute) {
+                $attributes[$className][$attribute->getName()] = $attribute->newInstance();
+            }
+        }
+
         $properties = [];
 
         foreach ($reflectionProperties as $property) {
             if ($property->isPrivate() || $property->isProtected()) {
                 $property->setAccessible(true);
             }
-            $properties[$property->getName()] = $property;
+
+            $propertyName = $property->getName();
+            $properties[$propertyName] = $property;
+
+            if (!empty($propertyAttributes = $property->getAttributes())) {
+                foreach ($propertyAttributes as $attribute) {
+                    $attributes[$propertyName][$attribute->getName()] = $attribute->newInstance();
+                }
+            }
         }
 
         ReflectionMap::$reflectionMap[$className] = new Reflection(
             $reflectionClass->newInstanceWithoutConstructor(),
             $properties,
+            $attributes,
         );
 
         return ReflectionMap::$reflectionMap[$className];
+    }
+
+    /**
+     * @param class-string $className
+     * @return object
+     * @throws ReflectionException
+     */
+    public static function getTargetInstance(string $className): object
+    {
+        return self::getReflection($className)->target();
     }
 
     /**
@@ -61,12 +87,38 @@ final class ReflectionMap
     }
 
     /**
-     * @param class-string $className
-     * @return object
      * @throws ReflectionException
      */
-    public static function getTargetInstance(string $className): object
+    public static function getClassAttributes(string $className): ?array
     {
-        return self::getReflection($className)->target();
+        $attributes = self::getReflection($className)->attributes();
+
+        if (!$attributes) {
+            return null;
+        }
+
+        if (!isset($attributes[$className])) {
+            throw new \RuntimeException();
+        }
+
+        return $attributes[$className];
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    public static function getPropertyAttributes(string $className, string $propertyName): ?array
+    {
+        $attributes = self::getReflection($className)->attributes();
+
+        if (!$attributes) {
+            return null;
+        }
+
+        if (!isset($attributes[$propertyName])) {
+            throw new \RuntimeException();
+        }
+
+        return $attributes[$propertyName];
     }
 }

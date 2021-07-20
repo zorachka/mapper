@@ -6,7 +6,7 @@ namespace Zorachka\Mapper\Tests;
 
 use DateTimeImmutable;
 
-final class TestClass
+final class Simple
 {
     private string $privateField;
     protected int $protectedField;
