@@ -34,13 +34,13 @@ final class Hydrator
         $reflectionProperties = $this->reflectionMap->getReflectionProperties($className);
 
         foreach ($data as $name => $value) {
-            if (!isset($reflectionProperties[$name])) {
+            if (! isset($reflectionProperties[$name])) {
                 throw new ReflectionException(sprintf('Property "%s" doesn\'t exists', $name));
             }
 
             $reflectionProperty = $reflectionProperties[$name];
 
-            if (!$reflectionProperty->hasType()) {
+            if (! $reflectionProperty->hasType()) {
                 throw new RuntimeException('Property must have a type for hydration');
             }
 
@@ -90,8 +90,8 @@ final class Hydrator
             $propertyName = $property->getName();
             $value = $property->getValue($object);
 
-            if (!empty($not)) {
-                if (!in_array($propertyName, $not)) {
+            if (! empty($not)) {
+                if (! in_array($propertyName, $not)) {
                     $data[$propertyName] = $value;
                 }
             } else {
