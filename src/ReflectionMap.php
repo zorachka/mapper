@@ -34,7 +34,7 @@ final class ReflectionMap
         $reflectionProperties = $reflectionClass->getProperties();
 
         $attributes = [];
-        if (!empty($classAttributes = $reflectionClass->getAttributes())) {
+        if (! empty($classAttributes = $reflectionClass->getAttributes())) {
             foreach ($classAttributes as $attribute) {
                 $attributes[$className][$attribute->getName()] = $attribute->newInstance();
             }
@@ -50,7 +50,7 @@ final class ReflectionMap
             $propertyName = $property->getName();
             $properties[$propertyName] = $property;
 
-            if (!empty($propertyAttributes = $property->getAttributes())) {
+            if (! empty($propertyAttributes = $property->getAttributes())) {
                 foreach ($propertyAttributes as $attribute) {
                     $attributes[$propertyName][$attribute->getName()] = $attribute->newInstance();
                 }
@@ -93,11 +93,11 @@ final class ReflectionMap
     {
         $attributes = self::getReflection($className)->attributes();
 
-        if (!$attributes) {
+        if (! $attributes) {
             return null;
         }
 
-        if (!isset($attributes[$className])) {
+        if (! isset($attributes[$className])) {
             throw new \RuntimeException();
         }
 
@@ -111,11 +111,11 @@ final class ReflectionMap
     {
         $attributes = self::getReflection($className)->attributes();
 
-        if (!$attributes) {
+        if (! $attributes) {
             return null;
         }
 
-        if (!isset($attributes[$propertyName])) {
+        if (! isset($attributes[$propertyName])) {
             throw new \RuntimeException();
         }
 
