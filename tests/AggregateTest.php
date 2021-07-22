@@ -9,7 +9,6 @@ use ReflectionException;
 use Zorachka\Mapper\Hydrator;
 use Zorachka\Mapper\Tests\Aggregate\Aggregate;
 use Zorachka\Mapper\Tests\Aggregate\AggregateId;
-use function PHPUnit\Framework\assertEquals;
 
 final class AggregateTest extends TestCase
 {

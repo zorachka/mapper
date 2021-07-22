@@ -59,7 +59,7 @@ final class Hydrator
                     'string' => fn ($value, $name) => $mapper->getNonEmptyStringOrNull($name),
                     'bool' => fn ($value, $name) => $mapper->getBooleanOrNull($name),
                     'int' => fn ($value, $name) => $mapper->getIntOrNull($name),
-                    'default' => fn ($value) => $value
+                    'default' => fn ($value) => $value,
                 ];
             } else {
                 $reflectionPropertyName = $reflectionProperty->getName();
@@ -72,7 +72,7 @@ final class Hydrator
                         new DateTimeImmutable(
                             $value,
                             new DateTimeZone('UTC'),
-                        )
+                        ),
                 ];
             }
 
