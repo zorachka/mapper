@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zorachka\Mapper;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use ReflectionException;
 use ReflectionNamedType;
 use RuntimeException;
@@ -45,30 +47,38 @@ final class Hydrator
 
             /** @var ReflectionNamedType $reflectionPropertyType */
             $reflectionPropertyType = $reflectionProperty->getType();
+            $reflectionPropertyTypeName = $reflectionPropertyType->getName();
+
+            $setter = fn (callable $fn) => $reflectionProperty->setValue(
+                $target,
+                $fn($value, $name)
+            );
 
             if ($reflectionPropertyType->isBuiltin()) {
                 $handlers = [
-                    'string' => fn () => $reflectionProperty->setValue(
-                        $target,
-                        $mapper->getNonEmptyStringOrNull($name)
-                    ),
-                    'bool' => fn () => $reflectionProperty->setValue(
-                        $target,
-                        $mapper->getBooleanOrNull($name)
-                    ),
-                    'int' => fn () => $reflectionProperty->setValue(
-                        $target,
-                        $mapper->getIntOrNull($name)
-                    ),
-                    'default' => fn () => $reflectionProperty->setValue($target, $value),
+                    'string' => fn ($value, $name) => $mapper->getNonEmptyStringOrNull($name),
+                    'bool' => fn ($value, $name) => $mapper->getBooleanOrNull($name),
+                    'int' => fn ($value, $name) => $mapper->getIntOrNull($name),
+                    'default' => fn ($value) => $value
                 ];
+            } else {
+                $reflectionPropertyName = $reflectionProperty->getName();
 
-                $reflectionPropertyTypeName = $reflectionPropertyType->getName();
-
-                $handler = $handlers[$reflectionPropertyTypeName] ?? $handlers['default'];
-
-                $handler();
+                $handlers = [
+                    'default' => fn ($value) => $this->hydrate($reflectionPropertyTypeName, [
+                        $reflectionPropertyName => $value,
+                    ]),
+                    DateTimeImmutable::class => fn ($value) =>
+                        new DateTimeImmutable(
+                            $value,
+                            new DateTimeZone('UTC'),
+                        )
+                ];
             }
+
+            $handler = $handlers[$reflectionPropertyTypeName] ?? $handlers['default'];
+
+            $setter($handler);
         }
 
         return $target;
@@ -85,8 +95,8 @@ final class Hydrator
     {
         $data = [];
         $className = $object::class;
-        foreach ($this->reflectionMap->getReflectionProperties($className) as $property) {
-            $propertyName = $property->getName();
+
+        foreach ($this->reflectionMap->getReflectionProperties($className) as $propertyName => $property) {
             $value = $property->getValue($object);
 
             if (! empty($not)) {
