@@ -6,12 +6,13 @@ namespace Zorachka\Mapper\Tests\Aggregate;
 
 use DateTimeImmutable;
 use Zorachka\EventDispatcher\Domain\EventRecordingCapabilities;
+use Zorachka\Mapper\Attributes\Aggregate;
 use Zorachka\Mapper\Attributes\Column;
 use Zorachka\Mapper\Attributes\Guid;
 use Zorachka\Mapper\Attributes\PrimaryKey;
 
-#[\Zorachka\Mapper\Attributes\Aggregate]
-final class Aggregate
+#[Aggregate]
+final class GenericAggregate
 {
     use EventRecordingCapabilities;
 

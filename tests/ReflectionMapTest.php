@@ -9,7 +9,7 @@ use ReflectionException;
 use Zorachka\Mapper\Attributes\Guid;
 use Zorachka\Mapper\Attributes\PrimaryKey;
 use Zorachka\Mapper\ReflectionMap;
-use Zorachka\Mapper\Tests\Aggregate\Aggregate;
+use Zorachka\Mapper\Tests\Aggregate\GenericAggregate;
 
 final class ReflectionMapTest extends TestCase
 {
@@ -55,7 +55,7 @@ final class ReflectionMapTest extends TestCase
      */
     public function testGetClassAttributes(): void
     {
-        $attributes = ReflectionMap::getClassAttributes(Aggregate::class);
+        $attributes = ReflectionMap::getClassAttributes(GenericAggregate::class);
 
         self::assertIsArray($attributes);
         self::assertArrayHasKey(\Zorachka\Mapper\Attributes\Aggregate::class, $attributes);
@@ -66,7 +66,7 @@ final class ReflectionMapTest extends TestCase
      */
     public function testGetPropertyAttributes(): void
     {
-        $attributes = ReflectionMap::getPropertyAttributes(Aggregate::class, 'id');
+        $attributes = ReflectionMap::getPropertyAttributes(GenericAggregate::class, 'id');
 
         self::assertIsArray($attributes);
 

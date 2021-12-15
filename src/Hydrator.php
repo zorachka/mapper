@@ -97,14 +97,46 @@ final class Hydrator
         $className = $object::class;
 
         foreach ($this->reflectionMap->getReflectionProperties($className) as $propertyName => $property) {
-            $value = $property->getValue($object);
+            /** @var ReflectionNamedType $reflectionPropertyType */
+            $reflectionPropertyType = $property->getType();
+            $reflectionPropertyTypeName = $reflectionPropertyType->getName();
+
+//            \var_dump($propertyName, $property->getValue($object), $reflectionPropertyTypeName, $reflectionPropertyType->isBuiltin());
+//            die();
+            $getter = fn (callable $fn) => $property->getValue(
+                $fn($object)
+            );
+
+            \var_dump($object, $reflectionPropertyType->isBuiltin());
+
+            if (\is_object($object)) {}
+
+            if ($reflectionPropertyType->isBuiltin()) {
+                $handlers = [
+                    'default' => fn ($value) => $value
+                ];
+            } else {
+                $handlers = [
+                    'default' => fn ($value) => $this->extract($value),
+                    DateTimeImmutable::class => fn ($value) => $value->format('Y-m-d H:i:s')
+                ];
+            }
+
+            $handler = $handlers[$reflectionPropertyTypeName] ?? $handlers['default'];
+
+//            \var_dump($handler);
+//            die();
+
+            $propertyValue = $getter($handler);
+            \var_dump($propertyValue);
+            die();
 
             if (! empty($not)) {
                 if (! in_array($propertyName, $not)) {
-                    $data[$propertyName] = $value;
+                    $data[$propertyName] = $propertyValue;
                 }
             } else {
-                $data[$propertyName] = $value;
+                $data[$propertyName] = $propertyValue;
             }
         }
 

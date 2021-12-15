@@ -7,7 +7,7 @@ namespace Zorachka\Mapper\Tests;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Zorachka\Mapper\Hydrator;
-use Zorachka\Mapper\Tests\Aggregate\Aggregate;
+use Zorachka\Mapper\Tests\Aggregate\GenericAggregate;
 use Zorachka\Mapper\Tests\Aggregate\AggregateId;
 use function PHPUnit\Framework\assertEquals;
 
@@ -26,8 +26,8 @@ final class AggregateTest extends TestCase
      */
     public function testHydrate(): void
     {
-        /** @var Aggregate $aggregate */
-        $aggregate = $this->hydrator->hydrate(Aggregate::class, [
+        /** @var GenericAggregate $aggregate */
+        $aggregate = $this->hydrator->hydrate(GenericAggregate::class, [
             'id' => '00000000-0000-0000-0000-000000000000',
             'string' => 'string value',
             'boolean' => 0,
@@ -49,7 +49,7 @@ final class AggregateTest extends TestCase
      */
     public function testExtract(): void
     {
-        $aggregate = Aggregate::create(
+        $aggregate = GenericAggregate::create(
             AggregateId::nil(),
             'string value',
             -1,

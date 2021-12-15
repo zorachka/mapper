@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zorachka\Mapper\Tests\Aggregate;
 
-final class Entity
+final class GenericEntity
 {
     private EntityId $id;
 
