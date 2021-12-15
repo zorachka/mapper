@@ -7,8 +7,8 @@ namespace Zorachka\Mapper\Tests;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Zorachka\Mapper\Hydrator;
-use Zorachka\Mapper\Tests\Aggregate\GenericAggregate;
 use Zorachka\Mapper\Tests\Aggregate\AggregateId;
+use Zorachka\Mapper\Tests\Aggregate\GenericAggregate;
 
 final class AggregateTest extends TestCase
 {

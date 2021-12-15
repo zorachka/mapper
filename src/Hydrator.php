@@ -109,16 +109,17 @@ final class Hydrator
 
             \var_dump($object, $reflectionPropertyType->isBuiltin());
 
-            if (\is_object($object)) {}
+            if (\is_object($object)) {
+            }
 
             if ($reflectionPropertyType->isBuiltin()) {
                 $handlers = [
-                    'default' => fn ($value) => $value
+                    'default' => fn ($value) => $value,
                 ];
             } else {
                 $handlers = [
                     'default' => fn ($value) => $this->extract($value),
-                    DateTimeImmutable::class => fn ($value) => $value->format('Y-m-d H:i:s')
+                    DateTimeImmutable::class => fn ($value) => $value->format('Y-m-d H:i:s'),
                 ];
             }
 

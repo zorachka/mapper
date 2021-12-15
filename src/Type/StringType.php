@@ -22,6 +22,5 @@ final class StringType implements CastType
 
     public function extract()
     {
-
     }
 }
