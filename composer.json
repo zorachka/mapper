@@ -1,9 +1,9 @@
 {
     "name": "zorachka/mapper",
-    "description": "Data Mapper",
+    "description": "Zorachka Mapper",
     "keywords": [
         "zorachka",
-        "mapper"
+        "logger"
     ],
     "homepage": "https://github.com/zorachka/mapper",
     "license": "MIT",
@@ -15,22 +15,22 @@
         }
     ],
     "require": {
-        "php": "^8.0"
+        "php": "^8.0",
+        "spiral/attributes": "^2.8",
+        "zorachka/container": "^2.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.17",
-        "phpunit/phpunit": "^9.5",
-        "roave/security-advisories": "dev-latest",
-        "vimeo/psalm": "^4.3"
+        "pestphp/pest": "^1.21",
+        "roave/security-advisories": "dev-latest"
     },
     "autoload": {
         "psr-4": {
-            "Zorachka\\Mapper\\": "src"
+            "Zorachka\\Framework\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Zorachka\\Mapper\\Tests\\": "tests"
+            "Zorachka\\Framework\\Tests\\": "tests"
         }
     },
     "config": {
