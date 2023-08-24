@@ -1,11 +1,10 @@
 {
     "name": "zorachka/mapper",
-    "description": "Data Mapper",
+    "description": "Zorachka Mapper",
     "keywords": [
-        "zorachka",
-        "mapper"
+        "zorachka"
     ],
-    "homepage": "https://github.com/zorachka/mapper",
+    "homepage": "https://github.com/zorachka/zorachka",
     "license": "MIT",
     "authors": [
         {
@@ -15,13 +14,7 @@
         }
     ],
     "require": {
-        "php": "^8.0"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.17",
-        "phpunit/phpunit": "^9.5",
-        "roave/security-advisories": "dev-latest",
-        "vimeo/psalm": "^4.3"
+        "php": "^8.1"
     },
     "autoload": {
         "psr-4": {
@@ -34,7 +27,10 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

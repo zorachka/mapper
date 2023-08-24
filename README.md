@@ -1,14 +1,17 @@
-# Data Mapper
+<p align="center">
+    <a href="https://github.com/zorachka" target="_blank">
+        <img src="https://avatars0.githubusercontent.com/u/86768962" height="240px">
+    </a>
+    <h1 align="center">Zorachka Mapper</h1>
+    <br>
+</p>
+
+This package provides ...
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/zorachka/mapper.svg?style=flat-square)](https://packagist.org/packages/zorachka/mapper)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/zorachka/mapper/run-tests?label=tests)](https://github.com/zorachka/mapper/actions?query=workflow%3ATests+branch%3Amaster)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/zorachka/mapper/Check%20&%20fix%20styling?label=code%20style)](https://github.com/zorachka/mapper/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amaster)
+[![Tests](https://github.com/zorachka/mapper/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/zorachka/mapper/actions/workflows/run-tests.yml)
+[![Analysis](https://github.com/zorachka/mapper/actions/workflows/analyze.yml/badge.svg?branch=main)](https://github.com/zorachka/mapper/actions/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/zorachka/mapper.svg?style=flat-square)](https://packagist.org/packages/zorachka/mapper)
-
----
-
-This is simple Data Mapper.
-
 ## Installation
 
 You can install the package via composer:
@@ -20,12 +23,16 @@ composer require zorachka/mapper
 ## Usage
 
 ```php
+<?php
+
+declare(strict_types=1);
+
 ```
 
 ## Testing
 
 ```bash
-composer test
+make test
 ```
 
 ## Changelog
