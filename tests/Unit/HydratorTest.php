@@ -7,12 +7,12 @@ namespace Zorachka\Mapper\Tests\Unit;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Zorachka\Mapper\Hydrators\DateTimeImmutablePropertyHydrator;
+use Zorachka\Mapper\Hydrators\DefaultPropertyHydrator;
+use Zorachka\Mapper\Hydrators\EnumPropertyHydrator;
+use Zorachka\Mapper\Hydrators\ObjectHydratorUsingReflection;
+use Zorachka\Mapper\Hydrators\ObjectPropertyHydrator;
 use Zorachka\Mapper\KeyFormatters\KeyFormatterForSnakeCasing;
-use Zorachka\Mapper\Serializers\DateTimeImmutablePropertySerializer;
-use Zorachka\Mapper\Serializers\DefaultPropertySerializer;
-use Zorachka\Mapper\Serializers\EnumPropertySerializer;
-use Zorachka\Mapper\Serializers\ObjectPropertySerializer;
-use Zorachka\Mapper\Serializers\ObjectSerializerUsingReflection;
 use Zorachka\Mapper\Tests\Datasets\ValueObjects\DateTimeRFC3339;
 use Zorachka\Mapper\Tests\Datasets\ValueObjects\Id;
 use Zorachka\Mapper\Tests\Datasets\ValueObjects\PaymentStatusString;
@@ -26,46 +26,43 @@ use Zorachka\Mapper\Tests\Datasets\WithValueObjects;
 /**
  * @internal
  */
-final class SerializerTest extends TestCase
+final class HydratorTest extends TestCase
 {
     public function providesData(): array
     {
         return [
             'WithScalarAndDateTimeImmutable' => [
+                WithScalarAndDateTimeImmutable::class,
+                [
+                    'id' => '1',
+                    'status' => '1',
+                    'is_available' => false,
+                    'created_at' => '2021-01-01 00:00:00',
+                ],
                 new WithScalarAndDateTimeImmutable(
                     id: '1',
                     status: 1,
                     isAvailable: false,
                     createdAt: new DateTimeImmutable('2021-01-01 00:00:00'),
                 ),
-                [
-                    'id' => '1',
-                    'status' => 1,
-                    'is_available' => false,
-                    'created_at' => '2021-01-01 00:00:00',
-                ],
             ],
             'WithScalarAndStatusEnum' => [
-                new WithScalarAndStatusEnum(
-                    id: '1',
-                    publishedStatus: PublishedStatusInt::PUBLISHED,
-                    paymentStatus: PaymentStatusString::PAID,
-                    createdAt: new DateTimeImmutable('2021-01-01 00:00:00'),
-                ),
+                WithScalarAndStatusEnum::class,
                 [
                     'id' => '1',
                     'published_status' => 1,
                     'payment_status' => 'paid',
                     'created_at' => '2021-01-01 00:00:00',
                 ],
+                new WithScalarAndStatusEnum(
+                    id: '1',
+                    publishedStatus: PublishedStatusInt::PUBLISHED,
+                    paymentStatus: PaymentStatusString::PAID,
+                    createdAt: new DateTimeImmutable('2021-01-01 00:00:00'),
+                ),
             ],
             'WithValueObjects' => [
-                WithValueObjects::create(
-                    Id::fromString('9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'),
-                    PostTitle::fromString('Hello World'),
-                    Price::of(100, 'USD'),
-                    DateTimeRFC3339::fromString('2023-05-11T00:00:00+08:00'),
-                ),
+                WithValueObjects::class,
                 [
                     'id' => '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
                     'title' => 'Hello World',
@@ -73,6 +70,12 @@ final class SerializerTest extends TestCase
                     'price_currency' => 'USD',
                     'created_at' => '2023-05-11T00:00:00+08:00',
                 ],
+                WithValueObjects::create(
+                    Id::fromString('9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'),
+                    PostTitle::fromString('Hello World'),
+                    Price::of(100, 'USD'),
+                    DateTimeRFC3339::fromString('2023-05-11T00:00:00+08:00'),
+                ),
             ],
         ];
     }
@@ -81,25 +84,24 @@ final class SerializerTest extends TestCase
      * @test
      * @dataProvider providesData
      */
-    public function shouldSerialize(object $object, array $expected): void
+    public function shouldHydrate(string $className, array $data, object $expected): void
     {
-        $serializer = new ObjectSerializerUsingReflection(
-            propertySerializers: [
-                DateTimeImmutable::class => static fn () => new DateTimeImmutablePropertySerializer(),
-                'string' => static fn () => new DefaultPropertySerializer(),
-                'int' => static fn () => new DefaultPropertySerializer(),
-                'bool' => static fn () => new DefaultPropertySerializer(),
-                'enum' => static fn () => new EnumPropertySerializer(),
-                'object' => static fn () => new ObjectPropertySerializer(),
+        $hydrator = new ObjectHydratorUsingReflection(
+            propertyHydrators: [
+                DateTimeImmutable::class => static fn () => new DateTimeImmutablePropertyHydrator(),
+                'string' => static fn () => new DefaultPropertyHydrator(),
+                'int' => static fn () => new DefaultPropertyHydrator(),
+                'bool' => static fn () => new DefaultPropertyHydrator(),
+                'enum' => static fn () => new EnumPropertyHydrator(),
+                'object' => static fn () => new ObjectPropertyHydrator(
+                    keyFormatter: new KeyFormatterForSnakeCasing(),
+                ),
             ],
             keyFormatter: new KeyFormatterForSnakeCasing(),
         );
 
-        $serializer->serialize($object);
+        $object = $hydrator->hydrate($className, $data);
 
-        Assert::assertEquals(
-            $expected,
-            $serializer->serialize($object)
-        );
+        Assert::assertObjectEquals($expected, $object, 'isEqualTo');
     }
 }

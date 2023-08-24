@@ -23,4 +23,12 @@ final class WithValueObjects
     {
         return new self($id, $title, $price, $createdAt);
     }
+
+    public function isEqualTo(WithValueObjects $other): bool
+    {
+        return $other->id->asString() === $this->id->asString()
+            && $other->title->asString() === $this->title->asString()
+            && $other->price->isEqualTo($this->price)
+            && $other->createdAt->asString() === $this->createdAt->asString();
+    }
 }

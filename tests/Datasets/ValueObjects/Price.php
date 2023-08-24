@@ -34,4 +34,10 @@ final class Price
     {
         return $this->currency;
     }
+
+    public function isEqualTo(Price $other): bool
+    {
+        return $this->amount === $other->amount
+            && $this->currency === $other->currency;
+    }
 }

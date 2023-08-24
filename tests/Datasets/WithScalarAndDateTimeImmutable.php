@@ -15,4 +15,12 @@ final class WithScalarAndDateTimeImmutable
         private readonly DateTimeImmutable $createdAt,
     ) {
     }
+
+    public function isEqualTo(WithScalarAndDateTimeImmutable $other): bool
+    {
+        return $other->id === $this->id
+            && $other->status === $this->status
+            && $other->isAvailable === $this->isAvailable
+            && $other->createdAt->format('Y-m-d H:i:s') === $this->createdAt->format('Y-m-d H:i:s');
+    }
 }

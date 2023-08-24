@@ -17,4 +17,12 @@ final class WithScalarAndStatusEnum
         private readonly DateTimeImmutable $createdAt,
     ) {
     }
+
+    public function isEqualTo(WithScalarAndStatusEnum $other): bool
+    {
+        return $other->id === $this->id
+            && $other->publishedStatus->value === $this->publishedStatus->value
+            && $other->paymentStatus->value === $this->paymentStatus->value
+            && $other->createdAt->format('Y-m-d H:i:s') === $this->createdAt->format('Y-m-d H:i:s');
+    }
 }
