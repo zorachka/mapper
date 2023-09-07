@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace Zorachka\Mapper\Container;
 
-use DateTimeImmutable;
 use Zorachka\Mapper\KeyFormatters\KeyFormatterForSnakeCasing;
-use Zorachka\Mapper\Serializers\DateTimeImmutablePropertySerializer;
-use Zorachka\Mapper\Serializers\DefaultPropertySerializer;
-use Zorachka\Mapper\Serializers\EnumPropertySerializer;
-use Zorachka\Mapper\Serializers\ObjectPropertySerializer;
 
 final class SerializerConfig
 {
@@ -30,14 +25,7 @@ final class SerializerConfig
      * @param class-string $keyFormatterClassName
      */
     public static function withDefaults(
-        array $propertySerializers = [
-            DateTimeImmutable::class => static fn () => new DateTimeImmutablePropertySerializer(),
-            'string' => static fn () => new DefaultPropertySerializer(),
-            'int' => static fn () => new DefaultPropertySerializer(),
-            'bool' => static fn () => new DefaultPropertySerializer(),
-            'enum' => static fn () => new EnumPropertySerializer(),
-            'object' => static fn () => new ObjectPropertySerializer(),
-        ],
+        array $propertySerializers,
         string $keyFormatterClassName = KeyFormatterForSnakeCasing::class,
     ): self {
         return new self($propertySerializers, $keyFormatterClassName);

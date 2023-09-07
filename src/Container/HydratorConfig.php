@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Zorachka\Mapper\Container;
 
-use DateTimeImmutable;
-use Zorachka\Mapper\Hydrators\DateTimeImmutablePropertyHydrator;
-use Zorachka\Mapper\Hydrators\DefaultPropertyHydrator;
-use Zorachka\Mapper\Hydrators\EnumPropertyHydrator;
-use Zorachka\Mapper\Hydrators\ObjectPropertyHydrator;
 use Zorachka\Mapper\KeyFormatters\KeyFormatterForSnakeCasing;
 
 final class HydratorConfig
@@ -30,16 +25,7 @@ final class HydratorConfig
      * @param class-string $keyFormatterClassName
      */
     public static function withDefaults(
-        array $propertyHydrators = [
-            DateTimeImmutable::class => static fn () => new DateTimeImmutablePropertyHydrator(),
-            'string' => static fn () => new DefaultPropertyHydrator(),
-            'int' => static fn () => new DefaultPropertyHydrator(),
-            'bool' => static fn () => new DefaultPropertyHydrator(),
-            'enum' => static fn () => new EnumPropertyHydrator(),
-            'object' => static fn () => new ObjectPropertyHydrator(
-                keyFormatter: new KeyFormatterForSnakeCasing(),
-            ),
-        ],
+        array $propertyHydrators,
         string $keyFormatterClassName = KeyFormatterForSnakeCasing::class,
     ): self {
         return new self($propertyHydrators, $keyFormatterClassName);
