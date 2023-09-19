@@ -40,8 +40,12 @@ final class ObjectSerializerUsingReflection implements Serializer
         ];
     }
 
-    public function serialize(object $object): array
+    public function serialize(?object $object): array
     {
+        if ($object === null) {
+            return [];
+        }
+
         $reflection = new ReflectionClass($object);
         $properties = $reflection->getProperties();
 

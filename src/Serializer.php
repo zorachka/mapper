@@ -6,5 +6,5 @@ namespace Zorachka\Mapper;
 
 interface Serializer
 {
-    public function serialize(object $object): array;
+    public function serialize(?object $object): array;
 }
