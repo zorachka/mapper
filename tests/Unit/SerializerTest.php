@@ -23,6 +23,7 @@ use Zorachka\Mapper\Tests\Datasets\WithScalarAndDateTimeImmutable;
 use Zorachka\Mapper\Tests\Datasets\WithScalarAndStatusEnum;
 use Zorachka\Mapper\Tests\Datasets\WithSomeNullableValueObjects;
 use Zorachka\Mapper\Tests\Datasets\WithValueObjects;
+use Zorachka\Mapper\Tests\Datasets\WithValueObjectsAndSkipAttribute;
 
 /**
  * @internal
@@ -88,6 +89,21 @@ final class SerializerTest extends TestCase
                     'price_amount' => 100,
                     'price_currency' => 'USD',
                     'created_at' => null,
+                ],
+            ],
+            'WithValueObjectsAndSkipAttribute' => [
+                WithValueObjectsAndSkipAttribute::create(
+                    Id::fromString('9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'),
+                    PostTitle::fromString('Hello World'),
+                    Price::of(100, 'USD'),
+                    DateTimeRFC3339::fromString('2023-05-11T00:00:00+08:00'),
+                ),
+                [
+                    'id' => '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+                    'title' => 'Hello World',
+                    'price_amount' => 100,
+                    'price_currency' => 'USD',
+                    'created_at' => '2023-05-11T00:00:00+08:00',
                 ],
             ],
         ];

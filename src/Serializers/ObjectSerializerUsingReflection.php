@@ -8,6 +8,7 @@ use Closure;
 use ReflectionClass;
 use ReflectionProperty;
 use UnitEnum;
+use Zorachka\Mapper\Attributes\Skip;
 use Zorachka\Mapper\KeyFormatter;
 use Zorachka\Mapper\Serializer;
 
@@ -51,6 +52,11 @@ final class ObjectSerializerUsingReflection implements Serializer
 
         $payload = [];
         foreach ($properties as $property) {
+            $attributes = $property->getAttributes(Skip::class);
+            if (\count($attributes) > 0) {
+                continue;
+            }
+
             $property->setAccessible(true);
             $value = $property->getValue($object);
 
