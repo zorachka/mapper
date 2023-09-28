@@ -53,7 +53,8 @@ final class ObjectSerializerUsingReflection implements Serializer
         $payload = [];
         foreach ($properties as $property) {
             $attributes = $property->getAttributes(Skip::class);
-            if (\count($attributes) > 0) {
+            $hasSkipAttribute = \count($attributes) > 0;
+            if ($hasSkipAttribute) {
                 continue;
             }
 

@@ -19,6 +19,7 @@ use Zorachka\Mapper\Tests\Datasets\ValueObjects\PaymentStatusString;
 use Zorachka\Mapper\Tests\Datasets\ValueObjects\PostTitle;
 use Zorachka\Mapper\Tests\Datasets\ValueObjects\Price;
 use Zorachka\Mapper\Tests\Datasets\ValueObjects\PublishedStatusInt;
+use Zorachka\Mapper\Tests\Datasets\WithNullableValueObject;
 use Zorachka\Mapper\Tests\Datasets\WithScalarAndDateTimeImmutable;
 use Zorachka\Mapper\Tests\Datasets\WithScalarAndStatusEnum;
 use Zorachka\Mapper\Tests\Datasets\WithSomeNullableValueObjects;
@@ -89,6 +90,16 @@ final class SerializerTest extends TestCase
                     'price_amount' => 100,
                     'price_currency' => 'USD',
                     'created_at' => null,
+                ],
+            ],
+            'WithNullableValueObject' => [
+                WithNullableValueObject::create(
+                    Id::fromString('9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'),
+                    null,
+                ),
+                [
+                    'id' => '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+                    'last_name' => null,
                 ],
             ],
             'WithValueObjectsAndSkipAttribute' => [

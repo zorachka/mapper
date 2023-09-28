@@ -6,6 +6,7 @@ namespace Zorachka\Mapper\Hydrators;
 
 use Closure;
 use ReflectionClass;
+use Zorachka\Mapper\Attributes\Skip;
 use Zorachka\Mapper\Hydrator;
 use Zorachka\Mapper\KeyFormatter;
 
@@ -38,6 +39,11 @@ final class ObjectHydratorUsingReflection implements Hydrator
         $properties = $reflectionClass->getProperties();
 
         foreach ($properties as $property) {
+            $attributes = $property->getAttributes(Skip::class);
+            $hasSkipAttribute = \count($attributes) > 0;
+            if ($hasSkipAttribute) {
+                continue;
+            }
             $propertyName = $property->getName();
 
             $keyName = $this->keyFormatter->propertyNameToKey($propertyName);

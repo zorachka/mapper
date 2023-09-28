@@ -29,6 +29,6 @@ final class WithSomeNullableValueObjects
         return $other->id->asString() === $this->id->asString()
             && $other->title->asString() === $this->title->asString()
             && $other->price->isEqualTo($this->price)
-            && $other->createdAt->asString() === $this->createdAt->asString();
+            && $other->createdAt?->asString() === $this->createdAt?->asString();
     }
 }

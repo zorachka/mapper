@@ -22,7 +22,9 @@ use Zorachka\Mapper\Tests\Datasets\ValueObjects\PublishedStatusInt;
 use Zorachka\Mapper\Tests\Datasets\WithNullableValueObject;
 use Zorachka\Mapper\Tests\Datasets\WithScalarAndDateTimeImmutable;
 use Zorachka\Mapper\Tests\Datasets\WithScalarAndStatusEnum;
+use Zorachka\Mapper\Tests\Datasets\WithSomeNullableValueObjects;
 use Zorachka\Mapper\Tests\Datasets\WithValueObjects;
+use Zorachka\Mapper\Tests\Datasets\WithValueObjectsAndSkipAttribute;
 
 /**
  * @internal
@@ -78,6 +80,22 @@ final class HydratorTest extends TestCase
                     DateTimeRFC3339::fromString('2023-05-11T00:00:00+08:00'),
                 ),
             ],
+            'WithSomeNullableValueObjects' => [
+                WithSomeNullableValueObjects::class,
+                [
+                    'id' => '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+                    'title' => 'Hello World',
+                    'price_amount' => 100,
+                    'price_currency' => 'USD',
+                    'created_at' => null,
+                ],
+                WithSomeNullableValueObjects::create(
+                    Id::fromString('9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'),
+                    PostTitle::fromString('Hello World'),
+                    Price::of(100, 'USD'),
+                    null,
+                ),
+            ],
             'WithNullableValueObject' => [
                 WithNullableValueObject::class,
                 [
@@ -87,6 +105,22 @@ final class HydratorTest extends TestCase
                 WithNullableValueObject::create(
                     Id::fromString('9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'),
                     null,
+                ),
+            ],
+            'WithValueObjectsAndSkipAttribute' => [
+                WithValueObjectsAndSkipAttribute::class,
+                [
+                    'id' => '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+                    'title' => 'Hello World',
+                    'price_amount' => 100,
+                    'price_currency' => 'USD',
+                    'created_at' => '2023-05-11T00:00:00+08:00',
+                ],
+                WithValueObjectsAndSkipAttribute::create(
+                    Id::fromString('9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'),
+                    PostTitle::fromString('Hello World'),
+                    Price::of(100, 'USD'),
+                    DateTimeRFC3339::fromString('2023-05-11T00:00:00+08:00'),
                 ),
             ],
         ];
