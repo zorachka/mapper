@@ -19,6 +19,7 @@ use Zorachka\Mapper\Tests\Datasets\ValueObjects\PaymentStatusString;
 use Zorachka\Mapper\Tests\Datasets\ValueObjects\PostTitle;
 use Zorachka\Mapper\Tests\Datasets\ValueObjects\Price;
 use Zorachka\Mapper\Tests\Datasets\ValueObjects\PublishedStatusInt;
+use Zorachka\Mapper\Tests\Datasets\WithNullableValueObject;
 use Zorachka\Mapper\Tests\Datasets\WithScalarAndDateTimeImmutable;
 use Zorachka\Mapper\Tests\Datasets\WithScalarAndStatusEnum;
 use Zorachka\Mapper\Tests\Datasets\WithValueObjects;
@@ -75,6 +76,17 @@ final class HydratorTest extends TestCase
                     PostTitle::fromString('Hello World'),
                     Price::of(100, 'USD'),
                     DateTimeRFC3339::fromString('2023-05-11T00:00:00+08:00'),
+                ),
+            ],
+            'WithNullableValueObject' => [
+                WithNullableValueObject::class,
+                [
+                    'id' => '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+                    'last_name' => null,
+                ],
+                WithNullableValueObject::create(
+                    Id::fromString('9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'),
+                    null,
                 ),
             ],
         ];

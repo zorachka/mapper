@@ -49,6 +49,11 @@ final class ObjectHydratorUsingReflection implements Hydrator
             $rawValue = \count($rawValues) > 0 ? $rawValues : $data[$keyName];
             $typeName = $property->getType()->getName();
 
+            if ($property->getType()->allowsNull() && $rawValue[$keyName] === null) {
+                $property->setValue($object, $rawValue[$keyName]);
+                continue;
+            }
+
             $propertyHydrator = $this->getPropertyHydrator($rawValue, $typeName)();
             $value = $propertyHydrator->hydrate($rawValue, $typeName, $keyName, $this);
 
